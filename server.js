@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const axios = require('axios');
 const rateLimit = require('express-rate-limit');
 require('dotenv').config();
@@ -209,12 +210,14 @@ app.get('/health', (req, res) => {
   });
 });
 
-app.get('/', (req, res) => { 
-  res.json({ 
-    status: 'everything is ok', 
-    timestamp: new Date().toISOString()
-  });
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Default route to serve index.html
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
